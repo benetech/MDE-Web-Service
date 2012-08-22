@@ -1,4 +1,4 @@
-package com.benetech.mde.compute;
+package org.benetech.mde.compute;
 
 
 
@@ -11,9 +11,8 @@ import gov.nasa.ial.mde.solver.symbolic.AnalyzedItem;
 
 import java.util.HashMap;
 
+import org.benetech.mde.bean.GraphDescriptionBean;
 import org.json.JSONObject;
-
-import com.benetech.mde.bean.GraphDescriptionBean;
 
 public class GraphDescription {
 	

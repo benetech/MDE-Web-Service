@@ -1,4 +1,4 @@
-package com.benetech.mde.bean;
+package org.benetech.mde.bean;
 
 import java.util.HashMap;
 

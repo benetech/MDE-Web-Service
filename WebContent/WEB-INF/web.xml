@@ -11,7 +11,7 @@
   </welcome-file-list>
   <servlet>
   	<servlet-name>MdeDescribeEquation</servlet-name>
-  	<servlet-class>com.benetech.mde.servlet.MdeDescribeEquation</servlet-class>
+  	<servlet-class>org.benetech.mde.servlet.MdeDescribeEquation</servlet-class>
   </servlet>
   <servlet-mapping>
   	<servlet-name>MdeDescribeEquation</servlet-name>

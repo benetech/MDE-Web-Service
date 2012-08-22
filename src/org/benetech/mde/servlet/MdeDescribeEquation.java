@@ -1,7 +1,6 @@
-package com.benetech.mde.servlet;
+package org.benetech.mde.servlet;
 
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -12,8 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.benetech.mde.bean.GraphDescriptionBean;
-import com.benetech.mde.compute.GraphDescription;
+import org.benetech.mde.compute.GraphDescription;
 
 //@WebServlet("/MdeDescribeEquation")
 public class MdeDescribeEquation extends HttpServlet {
