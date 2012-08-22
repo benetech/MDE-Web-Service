@@ -33,22 +33,9 @@ public class MdeDescribeEquation extends HttpServlet {
 	    PrintWriter out = response.getWriter();
 	    
 	    JSONObject respJson = description.getJSONResponseBean();
-	    out.println("<html>");
-	    out.println("<head><title>MdeDescribeEquation JSON </title></head>");
-	    out.println("<body>");
-//	    out.println("<h1>IS THIS WORKING?</h1>");
-//	    out.println("doGet(): description: "+description.getEquationDescriptionBean().getDescription());
-//	    out.println("doGet(): respJson: "+respJson);
 	    
 	    out.println(respJson);
-	    
-	    out.println("<form method='get' action='/Mde-Web-Service/MdeDescribeEquation'>");
-	    out.println("Enter an equation: ");
-		out.println("<input type='text' name='equation'>");
-		out.println("<input type='submit'>");
-		out.println("</form>");
-	    out.println("</body>");
-	    out.println("</html>");
+
 	}
 
 	@Override
