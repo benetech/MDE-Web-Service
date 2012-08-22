@@ -42,11 +42,11 @@ public class MdeDescribeEquation extends HttpServlet {
 	    
 	    out.println(respJson);
 	    
-//	    out.println("<form method='get' action='/mde-web-services/MdeDescribeEquation'>");
-//	    out.println("Enter an equation: ");
-//		out.println("<input type='text' name='equation'>");
-//		out.println("<input type='submit'>");
-//		out.println("</form>");
+	    out.println("<form method='get' action='/Mde-Web-Service/MdeDescribeEquation'>");
+	    out.println("Enter an equation: ");
+		out.println("<input type='text' name='equation'>");
+		out.println("<input type='submit'>");
+		out.println("</form>");
 	    out.println("</body>");
 	    out.println("</html>");
 	}

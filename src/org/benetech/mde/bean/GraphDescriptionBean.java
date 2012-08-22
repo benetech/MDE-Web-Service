@@ -5,7 +5,7 @@ import java.util.HashMap;
 public class GraphDescriptionBean {
 	private String equation;
 	private String description;
-	HashMap<String, String> params;
+//	HashMap<String, String> params;
 
 	public GraphDescriptionBean() {
 		super();
@@ -39,22 +39,22 @@ public class GraphDescriptionBean {
 		this.description = description;
 	}
 
-	public HashMap<String, String> getParams() {
-		return params;
-	}
+//	public HashMap<String, String> getParams() {
+//		return params;
+//	}
 
-	public void setParams(HashMap<String, String> params) {
-		this.params = params;
-	}
+//	public void setParams(HashMap<String, String> params) {
+//		this.params = params;
+//	}
 	
 	public String toString(){
 		String beanval;
 		
 		beanval = new String("GraphDescriptionBean: \nequation: "+equation+
 				"\ndescription: "+description);
-		if (params != null){
-			beanval.concat("\nparams are not null");
-		}
+//		if (params != null){
+//			beanval.concat("\nparams are not null");
+//		}
 		return beanval;
 	}
 

@@ -40,7 +40,7 @@ public class GraphDescription {
 		eqbean.setEquation(equation);
 		eqbean.setDescription(mdeFindSolution(equation));
 //		System.out.println("In GraphDescription(String equation): bean= "+eqbean);
-		eqbean.setParams(getEquationParameters());
+//		eqbean.setParams(getEquationParameters());
 		jsonObject = new JSONObject(eqbean);
 //		System.out.println("jsonObject = "+jsonObject);
 	}
