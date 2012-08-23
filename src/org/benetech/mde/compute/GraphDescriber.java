@@ -8,14 +8,18 @@ import gov.nasa.ial.mde.solver.Solver;
 import gov.nasa.ial.mde.solver.symbolic.AnalyzedData;
 import gov.nasa.ial.mde.solver.symbolic.AnalyzedEquation;
 import gov.nasa.ial.mde.solver.symbolic.AnalyzedItem;
+import gov.nasa.ial.mde.ui.graph.CartesianGraph;
 
 import java.util.HashMap;
+
+import javax.swing.JFrame;
 
 import org.benetech.mde.bean.GraphDescriptionBean;
 import org.json.JSONObject;
 
-public class GraphDescription {
+public class GraphDescriber {
 	
+	String equation;
 	String description = null;
 	MdeSettings currentSettings;
     Solver solver;
@@ -27,29 +31,53 @@ public class GraphDescription {
 	JSONObject jsonObject;
 	
 	
-	public GraphDescription(){
+	public GraphDescriber(String equation){
+		this.equation = equation;
 		currentSettings = new MdeSettings("mySettings");
 	    solver = new Solver();
-	    describer = new Describer(solver, currentSettings);
-		eqbean = new GraphDescriptionBean();
+
+	    mdeFindSolution(equation);
 	}
-	
-	public GraphDescription(String equation){
-		this();
-//		System.out.println("equation: "+equation);
+
+	public JSONObject getJSONDescription() {
+	    describer = new Describer(solver, currentSettings);
+	    describer.setOutputFormat("text");
+		if (solver.anyDescribable())
+        	//TODO:  make description mode an input
+            description = describer.getDescriptions("standards");
+        else 
+        	description = "Equation `" + equation + " ` is not supported by MDE.";
+		eqbean = new GraphDescriptionBean();
 		eqbean.setEquation(equation);
-		eqbean.setDescription(mdeFindSolution(equation));
+		eqbean.setDescription(description);
+		
 //		System.out.println("In GraphDescription(String equation): bean= "+eqbean);
 //		eqbean.setParams(getEquationParameters());
+		
 		jsonObject = new JSONObject(eqbean);
 //		System.out.println("jsonObject = "+jsonObject);
+		
+		return jsonObject;
 	}
 	
-	public GraphDescription(AnalyzedData data){
-		this();
+	public String getGraphSVG(){
+		String svg;
+		CartesianGraph grapher = new CartesianGraph(solver, currentSettings);
+		JFrame window = new JFrame("Tutorial_CartesianGraph");
+        window.getContentPane().add(grapher);
+        window.pack();
+		if (solver.anyGraphable()) {
+			svg = grapher.getSVG();
+//			System.out.println("SVG: "+svg);
+		}else{
+			svg = null;
+		}
+		window.removeAll();
+		window.dispose();
+		return svg;
 	}
 	
-	public String mdeFindSolution(Object data){
+	private void mdeFindSolution(Object data){
 		
         if(data instanceof String)
         	solver.add((String)data);
@@ -57,39 +85,9 @@ public class GraphDescription {
         	solver.add((AnalyzedItem)data);
         solver.solve();
         //solver.get(0).getAnalyzedItem().getFeatures();
-        if (solver.anyDescribable())
-        	//TODO:  make description mode an input
-            description = describer.getDescriptions("standards");
-        else 
-        	description = "Equation `" + data + " ` is not supported by MDE.";
-        
-//        solver.removeAll(); 
-//        System.out.println("In GraphDescription.mdeFindTextSolution: "+description);
-        
-    	return description;
 	}
 	
-	public HashMap getEquationParameters(){
-		AnalyzedItem item = solver.get(0).getAnalyzedItem();
-		HashMap<String, String> params = new HashMap<String, String>();
-        if(item instanceof AnalyzedEquation){
-//        	System.out.println("item is instanceof AnalyzedEquation");
-        	
-        	AnalyzedEquation ae = (AnalyzedEquation)item;
-        	String[] keys = ae.getParameters();
-//        	System.out.println("keys.length: "+keys.length);
-        	
-        	Double d;
-        	for(int i=0; i < keys.length; i++){
-//        		System.out.println("getEquationParameters: keys[i] = "+keys[i]);
-//        		System.out.println("Double.valueOf: "+Double.valueOf(ae.getParameterValue(keys[i])));
-        		d = Double.valueOf(ae.getParameterValue(keys[i]));
-        		params.put(keys[i], d.toString());
-        	}
-//        	System.out.println("GraphDescription.getEquationParameters(): "+params);
-        }
-        return params;
-	}
+
 	
 	public GraphDescriptionBean getEquationDescriptionBean(){
 		return eqbean;
@@ -119,6 +117,29 @@ public class GraphDescription {
 //		}
 //		return list;
 //	}
+	
+	
+//	public HashMap getEquationParameters(){
+//	AnalyzedItem item = solver.get(0).getAnalyzedItem();
+//	HashMap<String, String> params = new HashMap<String, String>();
+//    if(item instanceof AnalyzedEquation){
+////    	System.out.println("item is instanceof AnalyzedEquation");
+//    	
+//    	AnalyzedEquation ae = (AnalyzedEquation)item;
+//    	String[] keys = ae.getParameters();
+////    	System.out.println("keys.length: "+keys.length);
+//    	
+//    	Double d;
+//    	for(int i=0; i < keys.length; i++){
+////    		System.out.println("getEquationParameters: keys[i] = "+keys[i]);
+////    		System.out.println("Double.valueOf: "+Double.valueOf(ae.getParameterValue(keys[i])));
+//    		d = Double.valueOf(ae.getParameterValue(keys[i]));
+//    		params.put(keys[i], d.toString());
+//    	}
+////    	System.out.println("GraphDescription.getEquationParameters(): "+params);
+//    }
+//    return params;
+//}
 	
 //	public EquationDescriptionParamsBean getEquationDescriptionParamsBean(String equation){
 //		EquationDescriptionParamsBean bean = new EquationDescriptionParamsBean();
@@ -175,16 +196,5 @@ public class GraphDescription {
 	
 
 	
-//	public String getGraphSVG(Solver solver){
-//		MdeSettings currentSettings = new MdeSettings("myAppsMdeProperties");
-//		CartesianGraph grapher = new CartesianGraph(solver, currentSettings);
-//		JFrame window = new JFrame("Tutorial_CartesianGraph");
-//        window.getContentPane().add(grapher);
-//        window.pack();
-//		if (solver.anyGraphable()) {
-//			return grapher.getSVG();
-//		}else{
-//			return null;
-//		}
-//	}
+
 }
