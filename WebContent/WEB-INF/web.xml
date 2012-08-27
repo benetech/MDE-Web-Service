@@ -10,19 +10,27 @@
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
   <servlet>
-    <servlet-name>MdeDescribeEquation</servlet-name>
-    <servlet-class>org.benetech.mde.servlet.MdeDescribeEquation</servlet-class>
+    <servlet-name>GetEquationDescription</servlet-name>
+    <servlet-class>org.benetech.mde.servlet.GetEquationDescription</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>MdeDescribeEquation</servlet-name>
-    <url-pattern>/MdeDescribeEquation</url-pattern>
+    <servlet-name>GetEquationDescription</servlet-name>
+    <url-pattern>/GetEquationDescription</url-pattern>
   </servlet-mapping>
   <servlet>
-    <servlet-name>MdeGraphSVG</servlet-name>
-    <servlet-class>org.benetech.mde.servlet.MdeGraphSVG</servlet-class>
+    <servlet-name>GetSVG</servlet-name>
+    <servlet-class>org.benetech.mde.servlet.GetSVG</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>MdeGraphSVG</servlet-name>
-    <url-pattern>/MdeGraphSVG</url-pattern>
+    <servlet-name>GetSVG</servlet-name>
+    <url-pattern>/GetSVG</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>GetSVGFile</servlet-name>
+    <servlet-class>org.benetech.mde.servlet.GetSVGFile</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>GetSVGFile</servlet-name>
+    <url-pattern>/GetSVGFile</url-pattern>
   </servlet-mapping>
 </web-app>

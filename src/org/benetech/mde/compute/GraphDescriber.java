@@ -6,13 +6,18 @@ import gov.nasa.ial.mde.describer.Describer;
 import gov.nasa.ial.mde.properties.MdeSettings;
 import gov.nasa.ial.mde.solver.Solver;
 import gov.nasa.ial.mde.solver.symbolic.AnalyzedData;
-import gov.nasa.ial.mde.solver.symbolic.AnalyzedEquation;
 import gov.nasa.ial.mde.solver.symbolic.AnalyzedItem;
 import gov.nasa.ial.mde.ui.graph.CartesianGraph;
 
-import java.util.HashMap;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Reader;
+import java.io.Writer;
+import java.net.URI;
 
 import javax.swing.JFrame;
+import javax.tools.FileObject;
 
 import org.benetech.mde.bean.GraphDescriptionBean;
 import org.json.JSONObject;
@@ -76,6 +81,12 @@ public class GraphDescriber {
 		window.dispose();
 		return svg;
 	}
+	
+//	public void getGraphSVGFile(){
+//		String svg = getGraphSVG();
+//		String graphFilePath = getServletContext().getRealPath("/") + "tmp/graph.svg";
+//	    ResourceUtil.saveFile(graphFilePath, data.getSvg().getBytes());
+//	}
 	
 	private void mdeFindSolution(Object data){
 		
