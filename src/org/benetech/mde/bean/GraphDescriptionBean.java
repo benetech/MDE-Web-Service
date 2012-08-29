@@ -1,11 +1,18 @@
 package org.benetech.mde.bean;
 
+import gov.nasa.ial.mde.properties.MdeSettings;
+
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class GraphDescriptionBean {
 	private String equation;
 	private String description;
-//	HashMap<String, String> params;
+//	private String[] parameters;
 
 	public GraphDescriptionBean() {
 		super();
@@ -39,20 +46,20 @@ public class GraphDescriptionBean {
 		this.description = description;
 	}
 
-//	public HashMap<String, String> getParams() {
-//		return params;
+//	public String[] getParameters(){
+//		return parameters;
+//	}
+//
+//	public void setParameters(String[] parameters) {
+//		this.parameters = parameters;
 //	}
 
-//	public void setParams(HashMap<String, String> params) {
-//		this.params = params;
-//	}
-	
 	public String toString(){
 		String beanval;
 		
 		beanval = new String("GraphDescriptionBean: \nequation: "+equation+
 				"\ndescription: "+description);
-//		if (params != null){
+//		if (parameters != null){
 //			beanval.concat("\nparams are not null");
 //		}
 		return beanval;

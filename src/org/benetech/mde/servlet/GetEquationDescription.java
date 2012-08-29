@@ -35,15 +35,17 @@ public class GetEquationDescription extends HttpServlet {
 	    
 	    PrintWriter out = response.getWriter();
 	    
+	  //The only output for production is respJson
+	    out.print(respJson);
 
 	    //HTML out for testing only.  Comment out for production.
 //	    out.println("<html>");
 //	    out.println("<head></head><body>");
-	   
-	    //The only output for production is respJson
-	    out.print(respJson);
-	    
-	    //HTML out for testing only.  Comment out for production.
+//	    out.println("<form method='get' action='/Mde-Web-Service/GetEquationDescription'>");
+//	    out.println("Enter an equation: ");
+//	    out.println("<input type='text' name='equation'>");
+//	    out.println("<input type='submit'>");
+//	    out.println("</form>");
 //	    out.println("</head></body>");
 //	    out.println("</html>");
 	}
