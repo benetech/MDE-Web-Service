@@ -8,81 +8,158 @@ import gov.nasa.ial.mde.solver.symbolic.AnalyzedEquation;
 import gov.nasa.ial.mde.solver.symbolic.AnalyzedItem;
 import gov.nasa.ial.mde.ui.graph.CartesianGraph;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.Reader;
-import java.io.Writer;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.swing.JFrame;
-import javax.tools.FileObject;
 
 import org.benetech.mde.bean.GraphDescriptionBean;
 import org.json.JSONObject;
 
+/**
+ * GraphDescriber is a helper class for MDE web services. On construction, It
+ * initializes the MDE library and calls Solver to generate a "solved graph"
+ * from which various descriptions can be generated. After construction, call
+ * public methods to generate the description of choice.
+ * <p>
+ * Current description and data return methods are: <blockquote>
+ * <ul>
+ * <li>
+ * getTextDescription - returns the text description as a String</li>
+ * <li>
+ * getTextDescriptionBean - returns the bean representation of the text
+ * description.</li>
+ * <li>
+ * getJSONDescription - returns a text description as a JSON Object,
+ * 
+ * @see GraphDescriptionBean for the text description contents. </li><li>
+ *      getGraphSVG - returns the SVG description of the graph as a String. 
+ *      </li><li>
+ *      </ul>
+ * 
+ * @author Terry Hodgson, based on original code by Alex Yang August 2012
+ * 
+ */
 public class GraphDescriber {
 
-	String equation;
-	String description = null;
-	MdeSettings currentSettings;
-	Solver solver;
-	Describer describer;
-	String outputFormat;
-	String descriptionMode;
+	private String equation;
+	private String description = null;
+	private MdeSettings currentSettings;
+	private Solver solver;
+	private String mdeOutputFormat;
+	private String mdeDescriptionMode;
 
-	GraphDescriptionBean eqbean;
-	JSONObject jsonObject;
+	private GraphDescriptionBean eqbean;
+	private JSONObject jsonObject;
 
-	public GraphDescriber(String equation) {
+//	public GraphDescriber(String equation) {
+//		this.equation = equation;
+//		currentSettings = new MdeSettings("mySettings");
+//		solver = new Solver();
+//
+//		mdeFindSolution(equation);
+//	}
+	
+	public GraphDescriber(String equation, String mdeOutputFormat, String mdeDescriptionMode) {
+
 		this.equation = equation;
 		currentSettings = new MdeSettings("mySettings");
 		solver = new Solver();
 
 		mdeFindSolution(equation);
+		this.mdeOutputFormat = mdeOutputFormat;
+		this.mdeDescriptionMode = mdeDescriptionMode;
 	}
 
-	public JSONObject getJSONDescription() {
+	private void mdeFindSolution(Object data) {
+
+		if (data instanceof String)
+			solver.add((String) data);
+		else if (data instanceof AnalyzedData)
+			solver.add((AnalyzedItem) data);
+		solver.solve();
+		// solver.get(0).getAnalyzedItem().getFeatures();
+	}
+
+	/**
+	 * 
+	 */
+	public String getTextDescription() {
+		Describer describer;
+
+		if (mdeOutputFormat == null)
+			mdeOutputFormat = new String("text");
+		if (mdeDescriptionMode == null)
+			mdeDescriptionMode = new String("standards");
+		
+		System.out.println("mode: " + mdeDescriptionMode);
+		
 		describer = new Describer(solver, currentSettings);
-		describer.setOutputFormat("text");
-		if (solver.anyDescribable())
+		describer.setOutputFormat(mdeOutputFormat);
+		describer.setCurrentDescriptionMode(mdeDescriptionMode);
+//		eqbean = null;
+		
+		if (solver.anyDescribable()) {
 			// TODO: make description mode an input
-			description = describer.getDescriptions("standards");
-		else
+			description = describer.getDescriptions(mdeDescriptionMode);
+		} else
 			description = "Equation `" + equation
 					+ " ` is not supported by MDE.";
+		return description;
+	}
+
+	/**
+	 * 
+	 */
+	public GraphDescriptionBean getTextDescriptionBean() {
+		// solver is already initialized with the equation and solution
+
+		if (description == null)
+			description = getTextDescription();
+
 		eqbean = new GraphDescriptionBean();
 		eqbean.setEquation(equation);
 		eqbean.setDescription(description);
-	
+		return eqbean;
+
+	}
+
+	public JSONObject getJSONDescription() {
+		getTextDescriptionBean();
+
 		// System.out.println("In GraphDescription(String equation): bean= "+eqbean);
 
 		jsonObject = new JSONObject(eqbean);
-		
-		// We have to build the parameters array separately, because auto-bean instantiation isn't
+
+		// We have to build the parameters array separately, because auto-bean
+		// instantiation isn't
 		// working for arrays, nor HashMaps, nor ArrayLists.
-		
-		// We also only include the parameter names in the JSONObject because MDE will always 
-		// default the values to 1.0.  Any manipulation of parameters has to be done by the 
-		// client application, i.e., when a parameter value changes, rebuild the equation with those
+
+		// We also only include the parameter names in the JSONObject because
+		// MDE will always
+		// default the values to 1.0. Any manipulation of parameters has to be
+		// done by the
+		// client application, i.e., when a parameter value changes, rebuild the
+		// equation with those
 		// values and then call the MDE service.
-		
+
 		String keys[] = getEquationParameters();
-		try{
-		for (int i=0; i < keys.length; i++)
-			jsonObject.accumulate("parameters", keys[i]);
-		// System.out.println("jsonObject = "+jsonObject);
-		}
-		catch (Exception e){
+
+		// System.out.println("keys = null? "+(keys == null));
+		// System.out.println("keys.length: "+keys.length);
+
+		try {
+			for (int i = 0; i < keys.length; i++)
+				jsonObject.accumulate("parameters", keys[i]);
+			// System.out.println("jsonObject = "+jsonObject);
+		} catch (Exception e) {
 			System.err.println(e);
 		}
 		return jsonObject;
 	}
+
+	// public JSONObject getJSONResponseBean() {
+	// return jsonObject;
+	// }
 
 	public String getGraphSVG() {
 		String svg;
@@ -101,40 +178,22 @@ public class GraphDescriber {
 		return svg;
 	}
 
-	private void mdeFindSolution(Object data) {
-
-		if (data instanceof String)
-			solver.add((String) data);
-		else if (data instanceof AnalyzedData)
-			solver.add((AnalyzedItem) data);
-		solver.solve();
-		// solver.get(0).getAnalyzedItem().getFeatures();
-	}
-
-	public GraphDescriptionBean getEquationDescriptionBean() {
-		return eqbean;
-	}
-
-	public JSONObject getJSONResponseBean() {
-		return jsonObject;
-	}
-
-	// We'll only return the parameter names since MDE will always set the default value to 1.0
-	public String[] getEquationParameters() {
+	// We'll only return the parameter names since MDE will always set the
+	// default value to 1.0
+	private String[] getEquationParameters() {
 		AnalyzedItem item = solver.get(0).getAnalyzedItem();
-		String[] keys = null;  //test
-		
+		String[] keys = null; // test
+
 		if (item instanceof AnalyzedEquation) {
 			// System.out.println("item is instanceof AnalyzedEquation");
 
 			AnalyzedEquation ae = (AnalyzedEquation) item;
-			Hashtable<String,Object> ht = ae.getParameterHash();
-			keys = ae.getParameters();	
+			Hashtable<String, Object> ht = ae.getParameterHash();
+			keys = ae.getParameters();
 		}
 		return keys;
 	}
-	
-	
+
 	// ========================================================================================
 	// ========================================================================================
 

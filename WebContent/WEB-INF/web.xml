@@ -33,4 +33,12 @@
     <servlet-name>GetSVGFile</servlet-name>
     <url-pattern>/GetSVGFile</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>GetJSON</servlet-name>
+    <servlet-class>org.benetech.mde.servlet.GetJSON</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>GetJSON</servlet-name>
+    <url-pattern>/GetJSON</url-pattern>
+  </servlet-mapping>
 </web-app>
