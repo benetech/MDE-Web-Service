@@ -41,6 +41,7 @@ import org.json.JSONObject;
  */
 public class GraphDescriber {
 
+	
 	private String equation;
 	private String description = null;
 	private MdeSettings currentSettings;
