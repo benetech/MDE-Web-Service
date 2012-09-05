@@ -19,11 +19,9 @@ import org.json.JSONObject;
 public class GetEquationDescription extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-//	private static enum MDE_DESCRIPTION_MODE {visual,math,standards};
-//	private static enum MDE_OUTPUT_FORMAT {"text","html","xml"};
-//	private static String RESPONSE_FORMATS = {"text","textbean","json","svg","svgfile","mp3file"};
 	private String optionalMode = "standards";
 	private String optionalFormat = "text";
+	private String optionalResponseType = "text";
 
 	public GetEquationDescription() {
 		super();
@@ -37,10 +35,10 @@ public class GetEquationDescription extends HttpServlet {
 		response.setHeader("Pragma", "no-cache");
 
 		//Get input parameters
-		String equation = request.getParameter("equation");
-		String mdeFormatOut = request.getParameter("mdeFormatOut");
-		String descriptionMode = request.getParameter("descriptionMode");
-		String responseFormat = request.getParameter("responseFormat");
+		String equation = request.getParameter("equation").toLowerCase();
+		String mdeFormatOut = request.getParameter("mdeFormatOut").toLowerCase();
+		String descriptionMode = request.getParameter("descriptionMode").toLowerCase();
+		String responseFormat = request.getParameter("responseFormat").toLowerCase();
 		
 		//TODO:  Convert inputs to all lower case.
 
@@ -54,38 +52,36 @@ public class GetEquationDescription extends HttpServlet {
 			optionalFormat = mdeFormatOut;
 		if (descriptionMode.equals("visual") || descriptionMode.equals("math") || descriptionMode.equals("standards"))
 			optionalMode = descriptionMode;
+		if (responseFormat.equals("text") || responseFormat.equals("textbean") || responseFormat.equals("json") || 
+				responseFormat.equals("svg") || responseFormat.equals("svgfile") || responseFormat.equals("mp3file"))
+			optionalResponseType = responseFormat;
 
 		describer = new GraphDescriber(equation, optionalFormat, optionalMode);
 		
 		//TODO: check input equation for malicious stuff
 		
-		if (responseFormat.equals("text") || responseFormat.equals("textbean")
-				|| responseFormat.equals("json")
-				|| responseFormat.equals("svg")) {
+		if (optionalResponseType.equals("text") || optionalResponseType.equals("textbean")
+				|| optionalResponseType.equals("json")
+				|| optionalResponseType.equals("svg")) {
 			
 			PrintWriter out = response.getWriter();
 			response.setContentType("text/html");
-
-			switch (responseFormat) {
-			case "text":
+			
+			if (optionalResponseType.equals("text")){ 
 				String text = describer.getTextDescription();
 				out.print(text);
-				break;
-			case "textbean":
+			}
+			else if (optionalResponseType.equals("textbean")){
 				GraphDescriptionBean bean = describer.getTextDescriptionBean();
 				out.print(bean);
-				break;
-			case "json":
+			}
+			else if (optionalResponseType.equals("json")){
 				JSONObject respJson = describer.getJSONDescription();
 				out.print(respJson);
-				break;
-			case "svg":
+			}
+			else if (optionalResponseType.equals("svg")){
 				String SVGout = describer.getGraphSVG();
 				out.print(SVGout);
-				break;
-			default:
-				out.print("Error: Invalid response type requested");
-				break;
 			}
 			
 			 //HTML out for testing only. Comment out for production. ====================
@@ -99,7 +95,7 @@ public class GetEquationDescription extends HttpServlet {
 //			 out.println("<p>Enter mde description mode: visual,math,standards");
 //			 out.println("<input type='text' name='descriptionMode'>");
 //			 out.println("<p>Enter response format : text,json,textbean,svg,svgfile");
-//			 out.println("<input type='text' name='responseFormat'>");
+//			 out.println("<input type='text' name='optionalResponseType'>");
 //			 out.println("<input type='submit'>");
 //			 out.println("</form>");
 //			 out.println("</head></body>");
@@ -108,13 +104,13 @@ public class GetEquationDescription extends HttpServlet {
 			 
 			out.close();
 
-		} else if (responseFormat.equals("svgfile")
-				|| responseFormat.equals("mp3")) {
+		} else if (optionalResponseType.equals("svgfile")
+				|| optionalResponseType.equals("mp3file")) {
 
 			ServletOutputStream servOut = response.getOutputStream();
 
-			switch (responseFormat) {
-			case "svgfile":
+
+			if (optionalResponseType.equals("svgfile")){
 				response.setHeader("Content-Disposition",
 						"attachment; filename=graph.svg");
 				String SVGFileContents = describer.getGraphSVG();
@@ -124,13 +120,11 @@ public class GetEquationDescription extends HttpServlet {
 				ResourceUtil
 						.saveFile(graphFilePath, SVGFileContents.getBytes());
 				servOut.write(ResourceUtil.readFile(graphFilePath));
-				break;
-			case "mp3file":
-				// TODO:
-				break;
-			default:
-				break;
 			}
+//			else if (optionalResponseType.equals("mp3file")) {
+//				// TODO:  Implement
+//				;
+//			}
 			servOut.close();
 		}
 		else {
