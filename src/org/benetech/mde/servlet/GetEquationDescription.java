@@ -1,5 +1,7 @@
 package org.benetech.mde.servlet;
 
+//import org.apache.commons.lang3.StringUtils;
+
 import gov.nasa.ial.mde.util.ResourceUtil;
 
 import java.io.IOException;
@@ -35,11 +37,15 @@ public class GetEquationDescription extends HttpServlet {
 		response.setHeader("Pragma", "no-cache");
 
 		//Get input parameters
-		String equation = request.getParameter("equation").toLowerCase();
-		String mdeFormatOut = request.getParameter("mdeFormatOut").toLowerCase();
-		String descriptionMode = request.getParameter("descriptionMode").toLowerCase();
-		String responseFormat = request.getParameter("responseFormat").toLowerCase();
+		String equation = request.getParameter("equation");
+		String mdeFormatOut = request.getParameter("mdeFormatOut");
+		String descriptionMode = request.getParameter("descriptionMode");
+		String responseFormat = request.getParameter("responseFormat");
 		
+		if (equation != null) equation = equation.toLowerCase();
+		if (mdeFormatOut != null) mdeFormatOut = mdeFormatOut.toLowerCase();
+		if (descriptionMode !=null) descriptionMode = descriptionMode.toLowerCase();
+		if (responseFormat != null) responseFormat = responseFormat.toLowerCase();
 		//TODO:  Convert inputs to all lower case.
 
 //		System.out.println("responseFormat: " + responseFormat);
