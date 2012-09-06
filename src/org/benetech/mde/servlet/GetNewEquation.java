@@ -40,21 +40,21 @@ public class GetNewEquation extends HttpServlet {
 	    GraphDescriber describer = new GraphDescriber(equation);
 	    
 	    String newEquation = describer.getNewEquation(pnames, pvalues);
-		System.out.println("NEW EQUATION IS: "+newEquation);
+//		System.out.println("NEW EQUATION IS: "+newEquation);
 	    
 	  //The only output for production is respJson
-//	    out.print(respJson);
+	    out.print(newEquation);
 
 	    //HTML out for testing only.  Comment out for production.
-	    out.println("<html>");
-	    out.println("<head></head><body>");
-	    out.println("<form method='get' action='/Mde-Web-Service/GetEquationDescription'>");
-	    out.println("Enter an equation: ");
-	    out.println("<input type='text' name='equation'>");
-	    out.println("<input type='submit'>");
-	    out.println("</form>");
-	    out.println("</head></body>");
-	    out.println("</html>");
+//	    out.println("<html>");
+//	    out.println("<head></head><body>");
+//	    out.println("<form method='get' action='/Mde-Web-Service/GetEquationDescription'>");
+//	    out.println("Enter an equation: ");
+//	    out.println("<input type='text' name='equation'>");
+//	    out.println("<input type='submit'>");
+//	    out.println("</form>");
+//	    out.println("</head></body>");
+//	    out.println("</html>");
 	}
 
 	@Override
