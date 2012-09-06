@@ -41,4 +41,12 @@
     <servlet-name>GetJSON</servlet-name>
     <url-pattern>/GetJSON</url-pattern>
   </servlet-mapping>
+   <servlet>
+    <servlet-name>GetNewEquation</servlet-name>
+    <servlet-class>org.benetech.mde.servlet.GetNewEquation</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>GetNewEquation</servlet-name>
+    <url-pattern>/GetNewEquation</url-pattern>
+  </servlet-mapping>
 </web-app>

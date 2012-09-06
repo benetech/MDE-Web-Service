@@ -52,13 +52,13 @@ public class GraphDescriber {
 	private GraphDescriptionBean eqbean;
 	private JSONObject jsonObject;
 
-//	public GraphDescriber(String equation) {
-//		this.equation = equation;
-//		currentSettings = new MdeSettings("mySettings");
-//		solver = new Solver();
-//
-//		mdeFindSolution(equation);
-//	}
+	public GraphDescriber(String equation) {
+		this.equation = equation;
+		currentSettings = new MdeSettings("mySettings");
+		solver = new Solver();
+
+		mdeFindSolution(equation);
+	}
 	
 	public GraphDescriber(String equation, String mdeOutputFormat, String mdeDescriptionMode) {
 
@@ -79,6 +79,20 @@ public class GraphDescriber {
 			solver.add((AnalyzedItem) data);
 		solver.solve();
 		// solver.get(0).getAnalyzedItem().getFeatures();
+	}
+	
+	public String getNewEquation(String[] parameterNames, String[] parameterValues){
+		String newEquation;
+		
+		AnalyzedEquation ae = setEquationParameters(parameterNames, parameterValues);
+		
+		if (ae != null){
+			newEquation = ae.printEquation();
+
+			return newEquation;
+		}
+		
+		return null;
 	}
 
 	/**
@@ -182,18 +196,50 @@ public class GraphDescriber {
 	// We'll only return the parameter names since MDE will always set the
 	// default value to 1.0
 	private String[] getEquationParameters() {
-		AnalyzedItem item = solver.get(0).getAnalyzedItem();
-		String[] keys = null; // test
-
-		if (item instanceof AnalyzedEquation) {
-			// System.out.println("item is instanceof AnalyzedEquation");
-
-			AnalyzedEquation ae = (AnalyzedEquation) item;
-			Hashtable<String, Object> ht = ae.getParameterHash();
+		
+		String[] keys = null; 
+		
+		AnalyzedEquation ae = getAnalyzedEquation();
+		
+		if (ae != null)
 			keys = ae.getParameters();
-		}
 		return keys;
 	}
+	
+	public AnalyzedEquation setEquationParameters(String[] pnames, String[] pvalues){
+
+		AnalyzedEquation ae = getAnalyzedEquation();
+		
+		if (ae != null){
+			
+			for (int i=0; i < pnames.length; i++)
+				ae.setParameterValue(pnames[i], Double.valueOf(pvalues[i]).doubleValue());
+			ae.updateFeatures();
+			System.out.println("equation: "+ae.printOriginalEquation());
+		}
+		return ae;
+	}
+	
+	public AnalyzedEquation getAnalyzedEquation(){
+		AnalyzedItem item = getAnalyzedItem();
+		if (item instanceof AnalyzedEquation) {
+			// System.out.println("item is instanceof AnalyzedEquation");
+			AnalyzedEquation ae = (AnalyzedEquation) item;
+			return ae;
+		}
+		else
+			return null;
+	}
+	
+	/**
+	 * @return
+	 */
+	private AnalyzedItem getAnalyzedItem() {
+		AnalyzedItem item = solver.get(0).getAnalyzedItem();
+		return item;
+	}
+	
+
 
 	// ========================================================================================
 	// ========================================================================================

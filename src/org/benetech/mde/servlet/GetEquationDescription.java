@@ -43,9 +43,13 @@ public class GetEquationDescription extends HttpServlet {
 		String responseFormat = request.getParameter("responseFormat");
 		
 		if (equation != null) equation = equation.toLowerCase();
+//		else error out
 		if (mdeFormatOut != null) mdeFormatOut = mdeFormatOut.toLowerCase();
+		else mdeFormatOut = "text";
 		if (descriptionMode !=null) descriptionMode = descriptionMode.toLowerCase();
+		else descriptionMode = "standards";
 		if (responseFormat != null) responseFormat = responseFormat.toLowerCase();
+		else responseFormat = "text";
 		//TODO:  Convert inputs to all lower case.
 
 //		System.out.println("responseFormat: " + responseFormat);
