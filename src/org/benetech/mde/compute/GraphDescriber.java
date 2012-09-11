@@ -18,8 +18,8 @@ import org.json.JSONObject;
 /**
  * GraphDescriber is a helper class for MDE web services. On construction, It
  * initializes the MDE library and calls Solver to generate a "solved graph"
- * from which various descriptions can be generated. After construction, call
- * public methods to generate the description of choice.
+ * from which various descriptions can be generated. After construction, clients call
+ * GraphDescriber public methods to generate the description of choice.
  * <p>
  * Current description and data return methods are: <blockquote>
  * <ul>
@@ -29,7 +29,13 @@ import org.json.JSONObject;
  * getTextDescriptionBean - returns the bean representation of the text
  * description.</li>
  * <li>
- * getJSONDescription - returns a text description as a JSON Object,
+ * getJSONDescription - returns a text description as a JSON Object,</li> 
+ * <li>
+ * getGraphSVG - returns a svg description of the visual graph.
+ * </li>
+ * <li>
+ * getNewEquation - returns the equation with new parameter values substituted in.
+ * </ul>
  * 
  * @see GraphDescriptionBean for the text description contents. </li><li>
  *      getGraphSVG - returns the SVG description of the graph as a String. 
@@ -106,7 +112,7 @@ public class GraphDescriber {
 		if (mdeDescriptionMode == null)
 			mdeDescriptionMode = new String("standards");
 		
-		System.out.println("mode: " + mdeDescriptionMode);
+//		System.out.println("mode: " + mdeDescriptionMode);
 		
 		describer = new Describer(solver, currentSettings);
 		describer.setOutputFormat(mdeOutputFormat);
@@ -188,8 +194,10 @@ public class GraphDescriber {
 		} else {
 			svg = null;
 		}
+		grapher.removeAll();
 		window.removeAll();
 		window.dispose();
+		
 		return svg;
 	}
 
@@ -215,7 +223,7 @@ public class GraphDescriber {
 			for (int i=0; i < pnames.length; i++)
 				ae.setParameterValue(pnames[i], Double.valueOf(pvalues[i]).doubleValue());
 			ae.updateFeatures();
-			System.out.println("equation: "+ae.printOriginalEquation());
+//			System.out.println("equation: "+ae.printOriginalEquation());
 		}
 		return ae;
 	}

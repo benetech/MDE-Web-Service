@@ -5,12 +5,13 @@
 </head>
 <body>
 	<form method="get" action="/Mde-Web-Service/GetNewEquation">
-		Enter an equation:
-		<input type="text" name="equation">
-		<input type="hidden" name="pname" value="m">
-		<input type="hidden" name="pvalue" value="3.0">
+		Enter values for m and b in y=mx+b: 
+		<input type="hidden" name="equation" value="y=mx+b">
+		<p>
+		m <input type="hidden" name="pname" value="m">
+		<input type="text" name="pvalue" value="3.0">
 		<input type="hidden" name="pname" value="b">
-		<input type="hidden" name="pvalue" value="2.0">
+		b <input type="text" name="pvalue" value="2.0">
 		<input type="submit">
 	</form>
 </body>

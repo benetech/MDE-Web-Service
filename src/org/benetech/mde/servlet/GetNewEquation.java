@@ -13,7 +13,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.benetech.mde.compute.GraphDescriber;
 
-//@WebServlet("/MdeDescribeEquation")
+//TODO: Document this class
+//TODO: Error handling ?
+
+//@WebServlet("/GetNewEquation")
 public class GetNewEquation extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
@@ -32,8 +35,8 @@ public class GetNewEquation extends HttpServlet {
 	    String[] pnames = request.getParameterValues("pname");
 	    String[] pvalues = request.getParameterValues("pvalue");
 	    
-	    for (int i=0; i < pnames.length; i++) 
-	    	System.out.println("pname: "+pnames[i]+" pvalue: "+pvalues[i]);
+//	    for (int i=0; i < pnames.length; i++) 
+//	    	System.out.println("pname: "+pnames[i]+" pvalue: "+pvalues[i]);
 	    
 	    PrintWriter out = response.getWriter();
 	    
@@ -42,7 +45,7 @@ public class GetNewEquation extends HttpServlet {
 	    String newEquation = describer.getNewEquation(pnames, pvalues);
 //		System.out.println("NEW EQUATION IS: "+newEquation);
 	    
-	  //The only output for production is respJson
+	    response.setStatus(200);
 	    out.print(newEquation);
 
 	    //HTML out for testing only.  Comment out for production.
