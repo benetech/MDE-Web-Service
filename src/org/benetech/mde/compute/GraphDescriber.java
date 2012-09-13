@@ -18,8 +18,8 @@ import org.json.JSONObject;
 /**
  * GraphDescriber is a helper class for MDE web services. On construction, It
  * initializes the MDE library and calls Solver to generate a "solved graph"
- * from which various descriptions can be generated. After construction, clients call
- * GraphDescriber public methods to generate the description of choice.
+ * from which various descriptions can be generated. After construction, clients
+ * call GraphDescriber public methods to generate the description of choice.
  * <p>
  * Current description and data return methods are: <blockquote>
  * <ul>
@@ -29,17 +29,17 @@ import org.json.JSONObject;
  * getTextDescriptionBean - returns the bean representation of the text
  * description.</li>
  * <li>
- * getJSONDescription - returns a text description as a JSON Object,</li> 
+ * getJSONDescription - returns a text description as a JSON Object,</li>
  * <li>
- * getGraphSVG - returns a svg description of the visual graph.
- * </li>
+ * getGraphSVG - returns a svg description of the visual graph.</li>
  * <li>
- * getNewEquation - returns the equation with new parameter values substituted in.
+ * getNewEquation - returns the equation with new parameter values substituted
+ * in.
  * </ul>
  * 
  * @see GraphDescriptionBean for the text description contents. </li><li>
- *      getGraphSVG - returns the SVG description of the graph as a String. 
- *      </li><li>
+ *      getGraphSVG - returns the SVG description of the graph as a String.</li>
+ *      <li>
  *      </ul>
  * 
  * @author Terry Hodgson, based on original code by Alex Yang August 2012
@@ -47,7 +47,6 @@ import org.json.JSONObject;
  */
 public class GraphDescriber {
 
-	
 	private String equation;
 	private String description = null;
 	private MdeSettings currentSettings;
@@ -65,8 +64,9 @@ public class GraphDescriber {
 
 		mdeFindSolution(equation);
 	}
-	
-	public GraphDescriber(String equation, String mdeOutputFormat, String mdeDescriptionMode) {
+
+	public GraphDescriber(String equation, String mdeOutputFormat,
+			String mdeDescriptionMode) {
 
 		this.equation = equation;
 		currentSettings = new MdeSettings("mySettings");
@@ -86,18 +86,20 @@ public class GraphDescriber {
 		solver.solve();
 		// solver.get(0).getAnalyzedItem().getFeatures();
 	}
-	
-	public String getNewEquation(String[] parameterNames, String[] parameterValues){
+
+	public String getNewEquation(String[] parameterNames,
+			String[] parameterValues) {
 		String newEquation;
-		
-		AnalyzedEquation ae = setEquationParameters(parameterNames, parameterValues);
-		
-		if (ae != null){
+
+		AnalyzedEquation ae = setEquationParameters(parameterNames,
+				parameterValues);
+
+		if (ae != null) {
 			newEquation = ae.printEquation();
 
 			return newEquation;
 		}
-		
+
 		return null;
 	}
 
@@ -111,14 +113,14 @@ public class GraphDescriber {
 			mdeOutputFormat = new String("text");
 		if (mdeDescriptionMode == null)
 			mdeDescriptionMode = new String("standards");
-		
-//		System.out.println("mode: " + mdeDescriptionMode);
-		
+
+		// System.out.println("mode: " + mdeDescriptionMode);
+
 		describer = new Describer(solver, currentSettings);
 		describer.setOutputFormat(mdeOutputFormat);
 		describer.setCurrentDescriptionMode(mdeDescriptionMode);
-//		eqbean = null;
-		
+		// eqbean = null;
+
 		if (solver.anyDescribable()) {
 			// TODO: make description mode an input
 			description = describer.getDescriptions(mdeDescriptionMode);
@@ -197,48 +199,58 @@ public class GraphDescriber {
 		grapher.removeAll();
 		window.removeAll();
 		window.dispose();
-		
+
 		return svg;
 	}
 
 	// We'll only return the parameter names since MDE will always set the
 	// default value to 1.0
 	private String[] getEquationParameters() {
-		
-		String[] keys = null; 
-		
+
+		String[] keys = null;
+
 		AnalyzedEquation ae = getAnalyzedEquation();
-		
+
 		if (ae != null)
 			keys = ae.getParameters();
 		return keys;
 	}
-	
+
 	public AnalyzedEquation setEquationParameters(String[] pnames, String[] pvalues){
 
+		boolean paramsOk = true;
+		
 		AnalyzedEquation ae = getAnalyzedEquation();
 		
-		if (ae != null){
+		for (int i = 0; i < pnames.length; i++){
+			if (!ae.containsParameter(pnames[i])){
+				paramsOk = false;
+				break;
+			}
+		}
+		
+		if ((ae != null) && (paramsOk)){
 			
 			for (int i=0; i < pnames.length; i++)
 				ae.setParameterValue(pnames[i], Double.valueOf(pvalues[i]).doubleValue());
 			ae.updateFeatures();
 //			System.out.println("equation: "+ae.printOriginalEquation());
-		}
-		return ae;
-	}
-	
-	public AnalyzedEquation getAnalyzedEquation(){
-		AnalyzedItem item = getAnalyzedItem();
-		if (item instanceof AnalyzedEquation) {
-			// System.out.println("item is instanceof AnalyzedEquation");
-			AnalyzedEquation ae = (AnalyzedEquation) item;
 			return ae;
 		}
 		else
 			return null;
 	}
-	
+
+	public AnalyzedEquation getAnalyzedEquation() {
+		AnalyzedItem item = getAnalyzedItem();
+		if (item instanceof AnalyzedEquation) {
+			// System.out.println("item is instanceof AnalyzedEquation");
+			AnalyzedEquation ae = (AnalyzedEquation) item;
+			return ae;
+		} else
+			return null;
+	}
+
 	/**
 	 * @return
 	 */
@@ -246,8 +258,6 @@ public class GraphDescriber {
 		AnalyzedItem item = solver.get(0).getAnalyzedItem();
 		return item;
 	}
-	
-
 
 	// ========================================================================================
 	// ========================================================================================
