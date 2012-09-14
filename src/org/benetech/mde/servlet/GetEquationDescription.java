@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.benetech.mde.bean.GraphDescriptionBean;
 import org.benetech.mde.compute.GraphDescriber;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 //@WebServlet("/MdeDescribeEquation")
@@ -35,6 +36,7 @@ public class GetEquationDescription extends HttpServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 		response.setHeader("Cache-Control", "no-cache");
 		response.setHeader("Pragma", "no-cache");
+		//TODO: Set Access-Control-Allow-Origin
 
 		// Get input parameters
 		String equation = request.getParameter("equation");
@@ -77,7 +79,8 @@ public class GetEquationDescription extends HttpServlet {
 					|| responseFormat.equals("json")
 					|| responseFormat.equals("svg")
 					|| responseFormat.equals("svgfile")
-					|| responseFormat.equals("mp3file"))
+					|| responseFormat.equals("mp3file")
+					|| responseFormat.equals("jsonp"))
 				optionalResponseType = responseFormat;
 
 			// Instantiate GraphDescriber helper class
@@ -91,23 +94,39 @@ public class GetEquationDescription extends HttpServlet {
 			if (optionalResponseType.equals("text")
 					|| optionalResponseType.equals("textbean")
 					|| optionalResponseType.equals("json")
+					|| optionalResponseType.equals("jsonp")
 					|| optionalResponseType.equals("svg")) {
 
 				PrintWriter out = response.getWriter();
-				response.setContentType("text/html");
 				response.setStatus(200);
 
 				if (optionalResponseType.equals("text")) {
+					response.setContentType("text/html");
 					String text = describer.getTextDescription();
 					out.print(text);
 				} else if (optionalResponseType.equals("textbean")) {
+					response.setContentType("text/html");
 					GraphDescriptionBean bean = describer
 							.getTextDescriptionBean();
 					out.print(bean);
 				} else if (optionalResponseType.equals("json")) {
+					response.setContentType("application/json");
 					JSONObject respJson = describer.getJSONDescription();
 					out.print(respJson);
+				} else if (optionalResponseType.equals("jsonp")) {
+					response.setContentType("application/json");
+					final JSONObject respJson = new JSONObject();
+					try {
+						respJson.put("description", describer.getJSONDescription());
+						respJson.put("svg", describer.getGraphSVG());
+						out.print("updateEquationDescription(" + respJson + ")");
+					} catch (JSONException e) {
+						response.setStatus(400);
+						response.setContentType("text/html");
+						response.sendError(400, "Bad Request.  Error generating json response.");
+					}
 				} else if (optionalResponseType.equals("svg")) {
+					response.setContentType("text/html");
 					String SVGout = describer.getGraphSVG();
 					out.print(SVGout);
 				}
@@ -148,6 +167,7 @@ public class GetEquationDescription extends HttpServlet {
 				if (optionalResponseType.equals("svgfile")) {
 					response.setHeader("Content-Disposition",
 							"attachment; filename=graph.svg");
+					response.setContentType("image/svg+xml");
 					String SVGFileContents = describer.getGraphSVG();
 					String graphFilePath = getServletContext().getRealPath("/")
 							+ "graph.svg";
