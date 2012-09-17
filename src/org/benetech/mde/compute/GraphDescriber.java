@@ -187,9 +187,9 @@ public class GraphDescriber {
 	public String getGraphSVG() {
 		String svg;
 		CartesianGraph grapher = new CartesianGraph(solver, currentSettings);
-		JFrame window = new JFrame("Tutorial_CartesianGraph");
-		window.getContentPane().add(grapher);
-		window.pack();
+//		JFrame window = new JFrame("Tutorial_CartesianGraph");
+//		window.getContentPane().add(grapher);
+//		window.pack();
 		if (solver.anyGraphable()) {
 			svg = grapher.getSVG();
 			// System.out.println("SVG: "+svg);
@@ -197,8 +197,8 @@ public class GraphDescriber {
 			svg = null;
 		}
 		grapher.removeAll();
-		window.removeAll();
-		window.dispose();
+//		window.removeAll();
+//		window.dispose();
 
 		return svg;
 	}
