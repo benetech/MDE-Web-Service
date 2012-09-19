@@ -8,9 +8,13 @@ import gov.nasa.ial.mde.solver.symbolic.AnalyzedEquation;
 import gov.nasa.ial.mde.solver.symbolic.AnalyzedItem;
 import gov.nasa.ial.mde.ui.graph.CartesianGraph;
 
+import java.awt.Dimension;
 import java.util.Hashtable;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 import org.benetech.mde.bean.GraphDescriptionBean;
 import org.json.JSONObject;
@@ -187,9 +191,12 @@ public class GraphDescriber {
 	public String getGraphSVG() {
 		String svg;
 		CartesianGraph grapher = new CartesianGraph(solver, currentSettings);
-		JFrame window = new JFrame("Tutorial_CartesianGraph");
-		window.getContentPane().add(grapher);
-		window.pack();
+
+		Dimension d = new Dimension(400, 400);
+		grapher.setPreferredSize(d);
+		grapher.setBounds(0, 0, d.width,d.height);
+		grapher.paintImmediately(0, 0, d.width, d.height);
+
 		if (solver.anyGraphable()) {
 			svg = grapher.getSVG();
 			// System.out.println("SVG: "+svg);
@@ -197,9 +204,6 @@ public class GraphDescriber {
 			svg = null;
 		}
 		grapher.removeAll();
-		window.removeAll();
-		window.dispose();
-
 		return svg;
 	}
 
