@@ -22,7 +22,7 @@ import org.json.JSONObject;
 public class GetEquationDescription extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	private String optionalMode = "standards";
+	private String optionalMode = "algebra1";
 	private String optionalFormat = "text";
 	private String optionalResponseType = "text";
 
@@ -54,7 +54,7 @@ public class GetEquationDescription extends HttpServlet {
 			if (descriptionMode != null)
 				descriptionMode = descriptionMode.toLowerCase();
 			else
-				descriptionMode = "standards";
+				descriptionMode = "algebra1";
 			if (responseFormat != null)
 				responseFormat = responseFormat.toLowerCase();
 			else
@@ -72,7 +72,8 @@ public class GetEquationDescription extends HttpServlet {
 				optionalFormat = mdeFormatOut;
 			if (descriptionMode.equals("visual")
 					|| descriptionMode.equals("math")
-					|| descriptionMode.equals("standards"))
+					|| descriptionMode.equals("standards")
+					|| descriptionMode.equals("algebra1"))
 				optionalMode = descriptionMode;
 			if (responseFormat.equals("text")
 					|| responseFormat.equals("textbean")

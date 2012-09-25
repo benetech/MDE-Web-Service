@@ -116,13 +116,13 @@ public class GraphDescriber {
 		if (mdeOutputFormat == null)
 			mdeOutputFormat = new String("text");
 		if (mdeDescriptionMode == null)
-			mdeDescriptionMode = new String("standards");
+			mdeDescriptionMode = new String("algebra1");
 
 		// System.out.println("mode: " + mdeDescriptionMode);
 
 		describer = new Describer(solver, currentSettings);
-		describer.setOutputFormat(mdeOutputFormat);
 		describer.setCurrentDescriptionMode(mdeDescriptionMode);
+		describer.setOutputFormat(mdeOutputFormat);
 		// eqbean = null;
 
 		if (solver.anyDescribable()) {
