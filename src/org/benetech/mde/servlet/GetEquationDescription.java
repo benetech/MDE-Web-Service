@@ -163,16 +163,24 @@ public class GetEquationDescription extends HttpServlet {
 					|| optionalResponseType.equals("mp3file")) {
 
 				ServletOutputStream servOut = response.getOutputStream();
-				response.setStatus(200);
+                String SVGFileContents = describer.getGraphSVG();
+                if (null == SVGFileContents) {
+                    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                    response.setContentType("text/html");
+                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad Request.  Error generating response - likely malformed equation");
+                    return;
+                } else {
+                    response.setStatus(HttpServletResponse.SC_OK);
+                }
+
 
 				if (optionalResponseType.equals("svgfile")) {
 					response.setHeader("Content-Disposition",
 							"attachment; filename=graph.svg");
 					response.setContentType("image/svg+xml");
-					String SVGFileContents = describer.getGraphSVG();
+
 					String graphFilePath = getServletContext().getRealPath("/")
 							+ "graph.svg";
-
 					ResourceUtil.saveFile(graphFilePath,
 							SVGFileContents.getBytes());
 					servOut.write(ResourceUtil.readFile(graphFilePath));
@@ -186,9 +194,9 @@ public class GetEquationDescription extends HttpServlet {
 			} 
 		} 
 			else { // equation is null. error out
-			response.setStatus(400);
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			response.setContentType("text/html");
-			response.sendError(400, "Bad Request.  Equation is required input.");
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad Request.  Equation is required input.");
 		}
 
 	}
