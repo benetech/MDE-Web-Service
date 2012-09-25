@@ -83,7 +83,7 @@ public class GetNewEquation extends HttpServlet {
 					response.setContentType("application/json");
 
 					JSONObject respJson = new JSONObject(eqbean);
-					out.print("updateEquationDescription(" + respJson + ")");
+					out.print("newEquation(" + respJson + ")");
 				}
 				else {
 					response.setStatus(400);
