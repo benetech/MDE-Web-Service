@@ -1,5 +1,6 @@
 package org.benetech.mde.servlet;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -10,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.benetech.mde.bean.EquationBean;
 import org.benetech.mde.compute.GraphDescriber;
 
 //TODO: Document this class
@@ -69,10 +71,19 @@ public class GetNewEquation extends HttpServlet {
 				GraphDescriber describer = new GraphDescriber(equation);
 
 				String newEquation = describer.getNewEquation(pnames, pvalues);
+				
+				EquationBean eqbean = new EquationBean(newEquation);
+				
+				
 				// System.out.println("NEW EQUATION IS: "+newEquation);
 				if (newEquation != null) {
 					response.setStatus(200);
-					out.print(newEquation);
+//					out.print(newEquation);
+					
+					response.setContentType("application/json");
+
+					JSONObject respJson = new JSONObject(eqbean);
+					out.print("updateEquationDescription(" + respJson + ")");
 				}
 				else {
 					response.setStatus(400);

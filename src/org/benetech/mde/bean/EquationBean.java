@@ -1,25 +1,25 @@
 package org.benetech.mde.bean;
 
 
-public class GraphDescriptionBean {
+public class EquationBean {
 	private String equation;
-	private String description;
+//	private String description;
 //	private String[] parameters;
 
-	public GraphDescriptionBean() {
+	public EquationBean() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public GraphDescriptionBean(String equation) {
+	public EquationBean(String equation) {
 		super();
 		this.equation = equation;
 	}
 
-	public GraphDescriptionBean(String equation, String description) {
+	public EquationBean(String equation, String description) {
 		super();
 		this.equation = equation;
-		this.description = description;
+//		this.description = description;
 	}
 
 	public String getEquation() {
@@ -30,13 +30,13 @@ public class GraphDescriptionBean {
 		this.equation = equation;
 	}
 
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
+//	public String getDescription() {
+//		return description;
+//	}
+//
+//	public void setDescription(String description) {
+//		this.description = description;
+//	}
 
 //	public String[] getParameters(){
 //		return parameters;
@@ -49,8 +49,7 @@ public class GraphDescriptionBean {
 	public String toString(){
 		String beanval;
 		
-		beanval = new String("GraphDescriptionBean: \nequation: "+equation+
-				"\ndescription: "+description);
+		beanval = new String("EquationBean: \nequation: "+equation);
 //		if (parameters != null){
 //			beanval.concat("\nparams are not null");
 //		}

@@ -9,13 +9,8 @@ import gov.nasa.ial.mde.solver.symbolic.AnalyzedItem;
 import gov.nasa.ial.mde.ui.graph.CartesianGraph;
 
 import java.awt.Dimension;
-import java.util.Hashtable;
 
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-
+import org.benetech.mde.bean.EquationBean;
 import org.benetech.mde.bean.GraphDescriptionBean;
 import org.json.JSONObject;
 
@@ -58,7 +53,8 @@ public class GraphDescriber {
 	private String mdeOutputFormat;
 	private String mdeDescriptionMode;
 
-	private GraphDescriptionBean eqbean;
+	private GraphDescriptionBean eqdbean;
+//	private EquationBean eqbean;
 	private JSONObject jsonObject;
 
 	public GraphDescriber(String equation) {
@@ -143,19 +139,20 @@ public class GraphDescriber {
 		if (description == null)
 			description = getTextDescription();
 
-		eqbean = new GraphDescriptionBean();
-		eqbean.setEquation(equation);
-		eqbean.setDescription(description);
-		return eqbean;
+		eqdbean = new GraphDescriptionBean();
+		eqdbean.setEquation(equation);
+		eqdbean.setDescription(description);
+		return eqdbean;
 
 	}
+	
 
 	public JSONObject getJSONDescription() {
 		getTextDescriptionBean();
 
 		// System.out.println("In GraphDescription(String equation): bean= "+eqbean);
 
-		jsonObject = new JSONObject(eqbean);
+		jsonObject = new JSONObject(eqdbean);
 
 		// We have to build the parameters array separately, because auto-bean
 		// instantiation isn't
