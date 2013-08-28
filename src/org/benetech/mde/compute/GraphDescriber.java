@@ -1,6 +1,7 @@
 package org.benetech.mde.compute;
 
 import gov.nasa.ial.mde.describer.Describer;
+import gov.nasa.ial.mde.math.Bounds;
 import gov.nasa.ial.mde.properties.MdeSettings;
 import gov.nasa.ial.mde.solver.Solver;
 import gov.nasa.ial.mde.solver.symbolic.AnalyzedData;
@@ -47,6 +48,7 @@ import org.json.JSONObject;
 public class GraphDescriber {
 
 	private String equation;
+	private Bounds bounds;
 	private String description = null;
 	private MdeSettings currentSettings;
 	private Solver solver;
@@ -64,7 +66,7 @@ public class GraphDescriber {
 
 		mdeFindSolution(equation);
 	}
-
+	
 	public GraphDescriber(String equation, String mdeOutputFormat,
 			String mdeDescriptionMode) {
 
@@ -76,14 +78,34 @@ public class GraphDescriber {
 		this.mdeOutputFormat = mdeOutputFormat;
 		this.mdeDescriptionMode = mdeDescriptionMode;
 	}
+	
+	public GraphDescriber(String equation, String mdeOutputFormat,
+			String mdeDescriptionMode, Bounds bounds) {
+
+		this.equation = equation;
+		this.bounds = bounds;
+		currentSettings = new MdeSettings("mySettings");
+		solver = new Solver();
+
+		mdeFindSolution(equation);
+		this.mdeOutputFormat = mdeOutputFormat;
+		this.mdeDescriptionMode = mdeDescriptionMode;
+	}
 
 	private void mdeFindSolution(Object data) {
-
+		System.out.println("Finding solution ... ");
 		if (data instanceof String)
 			solver.add((String) data);
 		else if (data instanceof AnalyzedData)
 			solver.add((AnalyzedItem) data);
-		solver.solve();
+		
+		if (this.bounds != null) {
+			System.out.println("Solving with bounds");
+			solver.solve(bounds);
+		} else {
+			System.out.println("Bounds are null.");
+			solver.solve();
+		}
 		// solver.get(0).getAnalyzedItem().getFeatures();
 	}
 
@@ -241,7 +263,7 @@ public class GraphDescriber {
 		else
 			return null;
 	}
-
+	
 	public AnalyzedEquation getAnalyzedEquation() {
 		AnalyzedItem item = getAnalyzedItem();
 		if (item instanceof AnalyzedEquation) {

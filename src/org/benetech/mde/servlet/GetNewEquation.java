@@ -3,6 +3,8 @@ package org.benetech.mde.servlet;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import gov.nasa.ial.mde.math.Bounds;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -67,7 +69,6 @@ public class GetNewEquation extends HttpServlet {
 				equation = equation.toLowerCase();
 
 				PrintWriter out = response.getWriter();
-
 				GraphDescriber describer = new GraphDescriber(equation);
 
 				String newEquation = describer.getNewEquation(pnames, pvalues);

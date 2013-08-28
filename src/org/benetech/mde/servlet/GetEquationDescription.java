@@ -2,6 +2,7 @@ package org.benetech.mde.servlet;
 
 //import org.apache.commons.lang3.StringUtils;
 
+import gov.nasa.ial.mde.math.Bounds;
 import gov.nasa.ial.mde.util.ResourceUtil;
 
 import java.io.IOException;
@@ -43,6 +44,10 @@ public class GetEquationDescription extends HttpServlet {
 		String mdeFormatOut = request.getParameter("mdeFormatOut");
 		String descriptionMode = request.getParameter("descriptionMode");
 		String responseFormat = request.getParameter("responseFormat");
+		String left = request.getParameter("left");
+		String right = request.getParameter("right");
+		String top = request.getParameter("top");
+		String bottom = request.getParameter("bottom");
 
 		if ((equation != null) && (equation != "")) {
 			equation = equation.toLowerCase();
@@ -85,9 +90,9 @@ public class GetEquationDescription extends HttpServlet {
 				optionalResponseType = responseFormat;
 
 			// Instantiate GraphDescriber helper class
-			GraphDescriber describer = new GraphDescriber(equation,
-					optionalFormat, optionalMode);
-
+			GraphDescriber describer = new GraphDescriber(equation, optionalFormat, 
+					optionalMode, getBounds(left, right, top, bottom));
+			
 			// If response type qualifies as text
 			// Set up text response writer
 			// Compute the desired response
@@ -200,7 +205,22 @@ public class GetEquationDescription extends HttpServlet {
 		}
 
 	}
-
+	
+	/**
+	 * Get bounds. If any are missing, use standard default (-10, 10, 10, -10).
+	 * @param left null allowed, defaults to -10
+	 * @param right null allowed, defaults to 10
+	 * @param top null allowed, defaults to 10
+	 * @param bottom null allowed, defaults to -10
+	 * @return bounds
+	 */
+	private Bounds getBounds(String left, String right, String top, String bottom) {
+		return new Bounds((left != null && left != "" ? Double.valueOf(left) : (double) -10),
+				(right != null && right != "" ? Double.valueOf(right) : (double) 10),
+				(top != null && top != "" ? Double.valueOf(top) : (double) 10),
+				(bottom != null && bottom != "" ? Double.valueOf(bottom) : (double) -10));
+	}
+	
 	@Override
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {

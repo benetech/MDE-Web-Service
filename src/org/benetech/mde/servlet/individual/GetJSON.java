@@ -1,4 +1,4 @@
-package org.benetech.mde.servlet;
+package org.benetech.mde.servlet.individual;
 
 
 import org.json.JSONObject;
