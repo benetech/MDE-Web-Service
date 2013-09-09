@@ -37,7 +37,7 @@ public class GetEquationDescription extends HttpServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 		response.setHeader("Cache-Control", "no-cache");
 		response.setHeader("Pragma", "no-cache");
-		//TODO: Set Access-Control-Allow-Origin
+		response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
 
 		// Get input parameters
 		String equation = request.getParameter("equation");
